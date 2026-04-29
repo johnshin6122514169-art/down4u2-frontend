@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is it down? | Status Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen">
+
+    <div class="max-w-xl w-full p-8 bg-white shadow-2xl rounded-2xl text-center">
+        <h1 class="text-4xl font-bold text-slate-800 mb-2">Is it down?</h1>
+        <p class="text-slate-500 mb-8">Check if a website is unavailable for everyone or just you.</p>
+
+        <div class="flex flex-col gap-4">
+            <input type="text" id="urlInput" placeholder="google.com" 
+                class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 text-lg transition-all">
+            
+            <button onclick="checkStatus()" id="btn"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors">
+                Check Site
+            </button>
+        </div>
+
+        <div id="result" class="mt-8 hidden p-6 rounded-xl border-2">
+            <p id="statusText" class="text-xl font-semibold"></p>
+            <p id="subText" class="text-sm mt-2 opacity-80"></p>
+        </div>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            const url = document.getElementById('urlInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const statusText = document.getElementById('statusText');
+            const btn = document.getElementById('btn');
+
+            if (!url) return alert("Please enter a URL");
+
+            // UI Loading State
+            btn.innerText = "Checking...";
+            btn.disabled = true;
+
+            try {
+                // In a real app, replace 'YOUR_BACKEND_URL' with your actual server endpoint
+                const response = await fetch(`http://localhost:3000/check?url=${url}`);
+                const data = await response.json();
+
+                resultDiv.classList.remove('hidden', 'bg-red-50', 'bg-green-50', 'border-red-200', 'border-green-200');
+                
+                if (data.status === 'up') {
+                    resultDiv.classList.add('bg-green-50', 'border-green-200', 'text-green-800');
+                    statusText.innerText = `It's just you. ${url} is up!`;
+                } else {
+                    resultDiv.classList.add('bg-red-50', 'border-red-200', 'text-red-800');
+                    statusText.innerText = `It's not just you! ${url} looks down.`;
+                }
+            } catch (error) {
+                alert("Error connecting to the checker service.");
+            } finally {
+                btn.innerText = "Check Site";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
