@@ -50,10 +50,10 @@
                 
                 if (data.status === 'up') {
                     resultDiv.classList.add('bg-green-50', 'border-green-200', 'text-green-800');
-                    statusText.innerText = `It's just you. ${url} is up!`;
+                    statusText.innerText = `Not Down 4 Me. It's just you. ${url} is up!`;
                 } else {
                     resultDiv.classList.add('bg-red-50', 'border-red-200', 'text-red-800');
-                    statusText.innerText = `It's not just you! ${url} looks down.`;
+                    statusText.innerText = `Down 4 Me 2. It's not just yiu! ${url} looks down.`;
                 }
             } catch (error) {
                 alert("Error connecting to the checker service.");
